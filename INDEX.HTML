@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stopwatch with Beep</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 50px;
+      }
+      #time {
+        font-size: 48px;
+        margin-bottom: 20px;
+      }
+      button {
+        font-size: 18px;
+        padding: 10px;
+        margin: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Stopwatch with Beep</h1>
+    <div id="time">00:00</div>
+    <button onclick="startTimer()">Start</button>
+    <button onclick="pauseTimer()">Pause</button>
+    <button onclick="resetTimer()">Reset</button>
+
+    <audio id="beep" src="/beep-07a.mp3" preload="auto"></audio>
+
+    <script>
+      let timer;
+      let seconds = 0;
+      let running = false;
+
+      function updateTime() {
+        let minutes = Math.floor(seconds / 60)
+          .toString()
+          .padStart(2, "0");
+        let secs = (seconds % 60).toString().padStart(2, "0");
+        document.getElementById("time").innerText = `${minutes}:${secs}`;
+      }
+
+      function startTimer() {
+        if (!running) {
+          running = true;
+          timer = setInterval(() => {
+            seconds++;
+            updateTime();
+            const beep = document.getElementById("beep");
+
+            if (seconds % 15 === 0) {
+              beep.currentTime = 0;
+              beep.play();
+            }
+          }, 1000);
+        }
+      }
+
+      function pauseTimer() {
+        running = false;
+        clearInterval(timer);
+      }
+
+      function resetTimer() {
+        running = false;
+        clearInterval(timer);
+        seconds = 0;
+        updateTime();
+      }
+    </script>
+  </body>
+</html>
